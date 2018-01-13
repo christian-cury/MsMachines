@@ -1,0 +1,3 @@
+MsMachine Plugin
+
+Dependencies: Vault
