@@ -1,29 +1,28 @@
 package com.mikesantos.MsMachines.Objects;
 
 import java.util.Calendar;
+
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import com.mikesantos.MsMachines.Utils.DateUtils;
 
 public abstract class IMachine {
-	private ItemStack machineIcon, fuelItem;
-	private Set<ItemStack> machineDrops;
-	private Date created, expires;
+	private ItemStack machineIcon, fuelItem = null;
+	private ArmorStand hologram = null;
+	private Set<ItemStack> machineDrops = new LinkedHashSet<>();
+	private Date created, expires = null;
+	private Block physicalMachine = null;
 	
 	public IMachine() {
 		super();
-	}
-
-	public IMachine(ItemStack machineIcon, ItemStack fuelItem, Set<ItemStack> machineDrops, Date created, Date expires) {
-		super();
-		this.machineIcon = machineIcon;
-		this.fuelItem = fuelItem;
-		this.machineDrops = machineDrops;
-		this.created = created;
-		this.expires = expires;
 	}
 
 	public ItemStack getMachineIcon() {
@@ -59,6 +58,41 @@ public abstract class IMachine {
 		this.fuelItem = fuelItem;
 	}
 	
+	public ArmorStand getHologram() {
+		return hologram;
+	}
+
+	public Block getPhysicalMachine() {
+		return physicalMachine;
+	}
+
+	public void setPhysicalMachine(Block physicalMachine) {
+		this.physicalMachine = physicalMachine;
+	}
+
+	public void createHologram(String text) {
+		if(getPhysicalMachine() != null) {
+			hologram = (ArmorStand) getPhysicalMachine().getLocation().getWorld().spawnEntity(getPhysicalMachine().getLocation(), EntityType.ARMOR_STAND);
+			hologram.setSmall(true);
+			hologram.setVisible(false);
+			hologram.setCustomNameVisible(true);
+			hologram.setBasePlate(false);
+			hologram.setCanPickupItems(false);
+			hologram.setGravity(false);
+			hologram.setRemoveWhenFarAway(false);
+			hologram.setArms(false);
+			hologram.setMarker(true);
+			
+			hologram.setCustomName(ChatColor.translateAlternateColorCodes('&', replaceVariables(text)));
+		}
+	}
+	
+	public void updateHologramTitle(String text) {
+		if(hologram != null) {
+			hologram.setCustomName(ChatColor.translateAlternateColorCodes('&', replaceVariables(text)));
+		}
+	}
+
 	public void setWorkingTime(int seconds) {
 		setExpires(DateUtils.addTimeInDate(DateUtils.getCurrentDate(), Calendar.SECOND, seconds));
 	}
@@ -69,6 +103,10 @@ public abstract class IMachine {
 	
 	public long getRemaingWorkTime() {
 		return !isWorking() ? -1 : DateUtils.getSecondsBetween2Dates(new Date(), getExpires()); 
+	}
+	
+	private String replaceVariables(String text) {
+		return text;
 	}
 	
 }
