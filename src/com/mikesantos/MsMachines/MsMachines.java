@@ -7,14 +7,20 @@ import com.mikesantos.MsMachines.Utils.Console;
 public class MsMachines extends JavaPlugin{
 	
 	@Override
-	public void onEnable() {
+	public void onLoad() {
 		Console.init(this);
+		super.onLoad();
+	}
+	
+	@Override
+	public void onEnable() {
+		
 		super.onEnable();
 	}
 	
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
+		
 		super.onDisable();
 	}
 }
