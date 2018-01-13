@@ -1,0 +1,4 @@
+name: MsMachines
+author: MikeSantos
+version: 0.1
+softdepend: [Vault]
